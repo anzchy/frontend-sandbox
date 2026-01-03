@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Sandbox - Architecture & Data Flow Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #4cc9f0;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        .diagram-section {
+            max-width: 1100px;
+            margin: 0 auto 60px;
+        }
+
+        .section-title {
+            color: #4cc9f0;
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2d4a6f;
+        }
+
+        /* Architecture Diagram */
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding: 30px;
+            background: #16213e;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .arch-layer {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .arch-box {
+            background: #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 180px;
+            text-align: center;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .arch-box:hover {
+            border-color: #4cc9f0;
+            transform: translateY(-5px);
+        }
+
+        .arch-box.primary {
+            background: linear-gradient(135deg, #4cc9f0 0%, #3a9ec9 100%);
+            color: #1a1a2e;
+        }
+
+        .arch-box.secondary {
+            background: linear-gradient(135deg, #7b2cbf 0%, #5a189a 100%);
+        }
+
+        .arch-box.storage {
+            background: linear-gradient(135deg, #38b000 0%, #2d8000 100%);
+        }
+
+        .arch-box h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .arch-box p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .arch-box .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        /* Connector Lines */
+        .connectors {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            position: relative;
+        }
+
+        .connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #4cc9f0;
+        }
+
+        .connector .arrow {
+            font-size: 24px;
+        }
+
+        .connector .label {
+            font-size: 10px;
+            color: #888;
+            background: #1a1a2e;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Data Flow Diagram */
+        .data-flow {
+            background: #16213e;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding: 20px 0;
+        }
+
+        .flow-step {
+            background: #0f3460;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .flow-step.highlight {
+            background: linear-gradient(135deg, #4cc9f0 0%, #3a9ec9 100%);
+            color: #1a1a2e;
+        }
+
+        .flow-step .step-num {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .flow-step .step-title {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .flow-step .step-desc {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .flow-arrow {
+            color: #4cc9f0;
+            font-size: 24px;
+        }
+
+        /* Component Details */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .component-card {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .component-card h4 {
+            color: #4cc9f0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .component-card h4 .badge {
+            font-size: 10px;
+            background: #0f3460;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: #888;
+        }
+
+        .component-card ul {
+            list-style: none;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .component-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #2d4a6f;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .component-card li:last-child {
+            border-bottom: none;
+        }
+
+        .component-card li::before {
+            content: '→';
+            color: #4cc9f0;
+        }
+
+        /* State Diagram */
+        .state-diagram {
+            background: #16213e;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .states-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .state-node {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 3px solid;
+            position: relative;
+        }
+
+        .state-node.idle {
+            border-color: #888;
+            background: #1a1a2e;
+        }
+
+        .state-node.editing {
+            border-color: #4cc9f0;
+            background: rgba(76, 201, 240, 0.1);
+        }
+
+        .state-node.updating {
+            border-color: #f7df1e;
+            background: rgba(247, 223, 30, 0.1);
+        }
+
+        .state-node.error {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .state-node .state-name {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .state-node .state-desc {
+            font-size: 10px;
+            color: #888;
+        }
+
+        .state-arrow {
+            color: #4cc9f0;
+            font-size: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .state-arrow .trigger {
+            font-size: 9px;
+            color: #888;
+            background: #1a1a2e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+
+        /* Legend */
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #0f3460;
+            border-radius: 8px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Frontend Sandbox - Architecture Diagram</h1>
+    <p class="subtitle">应用架构与数据流图 | MVP Version</p>
+
+    <!-- Architecture Overview -->
+    <div class="diagram-section">
+        <h2 class="section-title">1. System Architecture / 系统架构</h2>
+        <div class="architecture">
+            <!-- User Layer -->
+            <div class="arch-layer">
+                <div class="arch-box primary">
+                    <div class="icon">👤</div>
+                    <h4>User</h4>
+                    <p>前端开发者</p>
+                </div>
+            </div>
+
+            <div class="connectors">
+                <div class="connector">
+                    <span class="arrow">↓</span>
+                    <span class="label">交互</span>
+                </div>
+            </div>
+
+            <!-- UI Layer -->
+            <div class="arch-layer">
+                <div class="arch-box">
+                    <div class="icon">📁</div>
+                    <h4>File Explorer</h4>
+                    <p>文件列表管理</p>
+                </div>
+                <div class="arch-box">
+                    <div class="icon">📝</div>
+                    <h4>Monaco Editor</h4>
+                    <p>代码编辑器</p>
+                </div>
+                <div class="arch-box">
+                    <div class="icon">👁️</div>
+                    <h4>Preview Panel</h4>
+                    <p>实时预览窗口</p>
+                </div>
+                <div class="arch-box">
+                    <div class="icon">💻</div>
+                    <h4>Console</h4>
+                    <p>控制台输出</p>
+                </div>
+            </div>
+
+            <div class="connectors">
+                <div class="connector">
+                    <span class="arrow">↓</span>
+                    <span class="label">状态更新</span>
+                </div>
+                <div class="connector">
+                    <span class="arrow">↑</span>
+                    <span class="label">事件触发</span>
+                </div>
+            </div>
+
+            <!-- State Layer -->
+            <div class="arch-layer">
+                <div class="arch-box secondary">
+                    <div class="icon">🔄</div>
+                    <h4>State Manager</h4>
+                    <p>应用状态管理</p>
+                </div>
+                <div class="arch-box secondary">
+                    <div class="icon">📨</div>
+                    <h4>Event Bus</h4>
+                    <p>组件间通信</p>
+                </div>
+            </div>
+
+            <div class="connectors">
+                <div class="connector">
+                    <span class="arrow">↓</span>
+                    <span class="label">读/写</span>
+                </div>
+            </div>
+
+            <!-- Storage Layer -->
+            <div class="arch-layer">
+                <div class="arch-box storage">
+                    <div class="icon">💾</div>
+                    <h4>Virtual File System</h4>
+                    <p>虚拟文件系统</p>
+                </div>
+                <div class="arch-box storage">
+                    <div class="icon">🗃️</div>
+                    <h4>localStorage</h4>
+                    <p>持久化存储</p>
+                </div>
+            </div>
+
+            <div class="connectors">
+                <div class="connector">
+                    <span class="arrow">↓</span>
+                    <span class="label">postMessage</span>
+                </div>
+            </div>
+
+            <!-- Sandbox Layer -->
+            <div class="arch-layer">
+                <div class="arch-box">
+                    <div class="icon">🔒</div>
+                    <h4>iframe Sandbox</h4>
+                    <p>安全隔离执行环境</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Flow -->
+    <div class="diagram-section">
+        <h2 class="section-title">2. Real-time Preview Data Flow / 实时预览数据流</h2>
+        <div class="data-flow">
+            <div class="flow-container">
+                <div class="flow-step highlight">
+                    <div class="step-num">1</div>
+                    <div class="step-title">User Input</div>
+                    <div class="step-desc">用户编辑代码</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-num">2</div>
+                    <div class="step-title">onChange</div>
+                    <div class="step-desc">Monaco 触发事件</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-num">3</div>
+                    <div class="step-title">Debounce</div>
+                    <div class="step-desc">防抖 300ms</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-num">4</div>
+                    <div class="step-title">Update VFS</div>
+                    <div class="step-desc">更新虚拟文件</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-num">5</div>
+                    <div class="step-title">Generate HTML</div>
+                    <div class="step-desc">合并文件内容</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step highlight">
+                    <div class="step-num">6</div>
+                    <div class="step-title">Render</div>
+                    <div class="step-desc">iframe 渲染</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Component Details -->
+    <div class="diagram-section">
+        <h2 class="section-title">3. Component Responsibilities / 组件职责</h2>
+        <div class="components-grid">
+            <div class="component-card">
+                <h4>📁 FileExplorer <span class="badge">UI</span></h4>
+                <ul>
+                    <li>显示项目文件树结构</li>
+                    <li>处理文件选择/切换事件</li>
+                    <li>支持新建/重命名/删除操作</li>
+                    <li>显示文件类型图标</li>
+                    <li>高亮当前活动文件</li>
+                </ul>
+            </div>
+            <div class="component-card">
+                <h4>📝 CodeEditor <span class="badge">Core</span></h4>
+                <ul>
+                    <li>封装 Monaco Editor 实例</li>
+                    <li>管理多文件 Tab 切换</li>
+                    <li>监听内容变化事件</li>
+                    <li>提供语法高亮支持</li>
+                    <li>处理键盘快捷键</li>
+                </ul>
+            </div>
+            <div class="component-card">
+                <h4>👁️ PreviewPanel <span class="badge">Core</span></h4>
+                <ul>
+                    <li>创建和管理 iframe 沙箱</li>
+                    <li>合并 HTML/CSS/JS 生成预览</li>
+                    <li>处理预览刷新逻辑</li>
+                    <li>捕获并显示运行时错误</li>
+                    <li>实现无限循环检测</li>
+                </ul>
+            </div>
+            <div class="component-card">
+                <h4>💾 VirtualFileSystem <span class="badge">Data</span></h4>
+                <ul>
+                    <li>管理内存中的文件数据</li>
+                    <li>提供 CRUD 操作接口</li>
+                    <li>自动同步到 localStorage</li>
+                    <li>支持导出为 ZIP 格式</li>
+                    <li>加载时恢复文件状态</li>
+                </ul>
+            </div>
+            <div class="component-card">
+                <h4>🔄 StateManager <span class="badge">State</span></h4>
+                <ul>
+                    <li>管理全局应用状态</li>
+                    <li>当前打开的文件</li>
+                    <li>编辑器配置选项</li>
+                    <li>UI 布局状态</li>
+                    <li>错误和加载状态</li>
+                </ul>
+            </div>
+            <div class="component-card">
+                <h4>📦 ZipExporter <span class="badge">Util</span></h4>
+                <ul>
+                    <li>收集所有项目文件</li>
+                    <li>使用 JSZip 生成压缩包</li>
+                    <li>保持原有文件结构</li>
+                    <li>触发浏览器下载</li>
+                    <li>支持自定义文件名</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- State Machine -->
+    <div class="diagram-section">
+        <h2 class="section-title">4. Editor State Machine / 编辑器状态机</h2>
+        <div class="state-diagram">
+            <div class="states-container">
+                <div class="state-node idle">
+                    <div class="state-name">IDLE</div>
+                    <div class="state-desc">等待输入</div>
+                </div>
+                <div class="state-arrow">
+                    <span>→</span>
+                    <span class="trigger">用户输入</span>
+                </div>
+                <div class="state-node editing">
+                    <div class="state-name">EDITING</div>
+                    <div class="state-desc">编辑中</div>
+                </div>
+                <div class="state-arrow">
+                    <span>→</span>
+                    <span class="trigger">防抖结束</span>
+                </div>
+                <div class="state-node updating">
+                    <div class="state-name">UPDATING</div>
+                    <div class="state-desc">更新预览</div>
+                </div>
+                <div class="state-arrow">
+                    <span>→</span>
+                    <span class="trigger">渲染完成</span>
+                </div>
+                <div class="state-node idle">
+                    <div class="state-name">IDLE</div>
+                    <div class="state-desc">等待输入</div>
+                </div>
+            </div>
+            <div class="states-container" style="margin-top: 20px;">
+                <div class="state-node updating">
+                    <div class="state-name">UPDATING</div>
+                    <div class="state-desc">更新预览</div>
+                </div>
+                <div class="state-arrow">
+                    <span>→</span>
+                    <span class="trigger">运行错误</span>
+                </div>
+                <div class="state-node error">
+                    <div class="state-name">ERROR</div>
+                    <div class="state-desc">显示错误</div>
+                </div>
+                <div class="state-arrow">
+                    <span>→</span>
+                    <span class="trigger">用户修复</span>
+                </div>
+                <div class="state-node editing">
+                    <div class="state-name">EDITING</div>
+                    <div class="state-desc">编辑中</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="diagram-section">
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #4cc9f0, #3a9ec9);"></div>
+                <span>核心交互组件</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #7b2cbf, #5a189a);"></div>
+                <span>状态管理层</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #38b000, #2d8000);"></div>
+                <span>数据存储层</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #0f3460;"></div>
+                <span>UI 组件</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

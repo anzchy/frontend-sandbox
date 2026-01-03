@@ -9,6 +9,11 @@
 
 创建一个前端开发沙盒应用，允许用户在浏览器中编写 HTML、CSS 和 JavaScript 代码，并实时查看渲染结果。该应用参考 Scrimba 的设计，提供类似 IDE 的体验，但聚焦于前端开发测试场景。
 
+## Visual Design
+
+- **Wireframe Diagram**: [wireframe.html](./diagrams/wireframe.html) - 界面布局线框图
+- **Site Diagram**: [site-diagram.html](./diagrams/site-diagram.html) - 应用架构和数据流图
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - 编写代码并实时预览 (Priority: P1)
@@ -74,6 +79,22 @@
 
 ---
 
+### User Story 5 - 导出项目为 ZIP (Priority: P5)
+
+作为前端开发者，我希望能够将整个项目导出为 ZIP 文件，以便在本地保存备份、分享给他人或部署到其他平台。
+
+**Why this priority**: 导出功能是沙盒应用的重要补充，让用户的工作成果可以脱离浏览器使用。虽然不是核心功能，但对于完整的工作流程很有价值。
+
+**Independent Test**: 可以通过创建多个文件、点击导出、下载 ZIP、解压验证文件完整性来测试。
+
+**Acceptance Scenarios**:
+
+1. **Given** 用户有一个包含多个文件的项目，**When** 用户点击"导出为 ZIP"按钮，**Then** 浏览器下载一个包含所有项目文件的 ZIP 压缩包
+2. **Given** 用户导出了 ZIP 文件，**When** 用户解压该文件，**Then** 所有文件的内容与沙盒中的内容完全一致
+3. **Given** 用户的项目包含 HTML/CSS/JS 文件，**When** 用户解压 ZIP 并在浏览器中打开 index.html，**Then** 页面能够正常显示（与沙盒预览一致）
+
+---
+
 ### Edge Cases
 
 - **空文件处理**: 当文件内容为空时，预览窗口应显示空白页面而非错误
@@ -117,6 +138,11 @@
 - **FR-017**: 系统必须捕获 JavaScript 运行时错误并在控制台区域显示
 - **FR-018**: 系统必须检测并终止无限循环执行（超时保护）
 
+**项目导出功能**
+- **FR-019**: 系统必须支持将整个项目导出为 ZIP 压缩文件
+- **FR-020**: 导出的 ZIP 文件必须保持原有的文件结构和内容完整性
+- **FR-021**: 导出功能必须在浏览器端完成，无需服务器支持
+
 ### Key Entities
 
 - **Project（项目）**: 代表用户当前的工作空间，包含一组文件。属性：项目名称、创建时间、最后修改时间
@@ -152,5 +178,4 @@
 - 代码格式化工具
 - 版本控制（Git）集成
 - 模板项目库
-- 导出为 ZIP 文件
 - 自定义主题

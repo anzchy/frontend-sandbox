@@ -29,13 +29,20 @@
 - [x] Feature meets measurable outcomes defined in Success Criteria
 - [x] No implementation details leak into specification
 
+## Visual Design
+
+- [x] Wireframe diagram created (wireframe.html)
+- [x] Site/architecture diagram created (site-diagram.html)
+- [x] Diagrams linked in spec.md
+
 ## Validation Summary
 
 | Category | Status | Notes |
 |----------|--------|-------|
 | Content Quality | PASS | Spec focuses on WHAT and WHY, not HOW |
-| Requirement Completeness | PASS | All 18 functional requirements are testable |
-| Feature Readiness | PASS | 4 user stories with clear acceptance scenarios |
+| Requirement Completeness | PASS | All 21 functional requirements are testable |
+| Feature Readiness | PASS | 5 user stories with clear acceptance scenarios |
+| Visual Design | PASS | Wireframe and architecture diagrams included |
 
 ## Notes
 
@@ -43,3 +50,5 @@
 - All requirements are technology-agnostic
 - Clear MVP scope defined with explicit "Out of Scope" section
 - Success criteria are measurable without implementation details
+- ZIP export feature added (FR-019, FR-020, FR-021)
+- Visual diagrams available in `diagrams/` folder
