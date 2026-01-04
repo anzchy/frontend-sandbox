@@ -1,0 +1,182 @@
+:root {
+  /* Sizing */
+  --header-height: 40px;
+  --file-explorer-width: 200px;
+  --min-panel-width: 100px;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+
+  /* Transitions */
+  --transition-fast: 100ms ease;
+  --transition-normal: 200ms ease;
+}
+
+/* ============================================================================
+   Dark Theme (Default)
+   ============================================================================ */
+[data-theme="dark"], :root {
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #252526;
+  --bg-tertiary: #2d2d30;
+  --bg-hover: #3e3e42;
+  --bg-active: #094771;
+
+  --text-primary: #e8e8e8;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+
+  --accent-primary: #0078d4;
+  --accent-secondary: #3794ff;
+
+  --border-color: #3e3e42;
+  --border-light: #505050;
+  --border-subtle: #2d2d30;
+
+  --error: #f14c4c;
+  --error-color: #f14c4c;
+  --warning: #cca700;
+  --warning-color: #cca700;
+  --success: #89d185;
+  --success-color: #89d185;
+}
+
+/* ============================================================================
+   Light Theme
+   ============================================================================ */
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f3f3;
+  --bg-tertiary: #e8e8e8;
+  --bg-hover: #e0e0e0;
+  --bg-active: #cce5ff;
+
+  --text-primary: #1f1f1f;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+
+  --accent-primary: #0066cc;
+  --accent-secondary: #0078d4;
+
+  --border-color: #d4d4d4;
+  --border-light: #e0e0e0;
+  --border-subtle: #f0f0f0;
+
+  --error: #d32f2f;
+  --error-color: #d32f2f;
+  --warning: #f57c00;
+  --warning-color: #f57c00;
+  --success: #388e3c;
+  --success-color: #388e3c;
+}
+
+/* ============================================================================
+   Cream Theme (米色主题)
+   ============================================================================ */
+[data-theme="cream"] {
+  --bg-primary: #faf8f5;
+  --bg-secondary: #f5f2eb;
+  --bg-tertiary: #ebe7de;
+  --bg-hover: #e5e0d5;
+  --bg-active: #d4e8d4;
+
+  --text-primary: #3d3929;
+  --text-secondary: #6b6458;
+  --text-muted: #9a9285;
+
+  --accent-primary: #6b8e4e;
+  --accent-secondary: #8ab06a;
+
+  --border-color: #d9d4c8;
+  --border-light: #e5e0d5;
+  --border-subtle: #f0ece4;
+
+  --error: #c75450;
+  --error-color: #c75450;
+  --warning: #c9a227;
+  --warning-color: #c9a227;
+  --success: #6b8e4e;
+  --success-color: #6b8e4e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-hover);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+/* Button Reset */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Input Reset */
+input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--accent-primary);
+  color: white;
+}
